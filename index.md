@@ -511,3 +511,5 @@ ggplot(merged_data, aes(x = AVG_WIND, y = OBSERVATION.COUNT)) +
 
 cor_test <- cor.test(merged_data$OBSERVATION.COUNT, merged_data$AVG_WIND)
 cor_test$p.value
+#[1] 0.6530605
+
