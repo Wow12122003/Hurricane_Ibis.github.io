@@ -1,6 +1,8 @@
 # Here you will see the code I did over my spring of 2025 semester at Agnes Scott College. 
 # This code explored the potential relationship with hurricane magnitudes and White Ibis occurances in and around the Georgia area.
 
+<img width="1000" height="160" src="https://en.m.wikipedia.org/wiki/File:NOAA_logo.svg">
+
 install.packages("readr")
 #to read csv files
 install.packages("dplyr")
