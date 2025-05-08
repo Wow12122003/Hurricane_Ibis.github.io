@@ -5,31 +5,45 @@
 <img width="1000" height="160" src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Logo_ebird.png">
 
 install.packages("readr")
-#to read csv files <brk>
+#to read csv files 
+
 install.packages("dplyr")
 #to manipulate data
+
 install.packages("ggplot2")
 #to visualize data
+
 install.packages("lubridate")
 #to handle date/time observations
+
 install.packages("auk")
 #read bird data from eBird
+
 install.packages("plotly")
 #for graphs
+
 install.packages("maps")
 #for maps to show up on graphs
+
 install.packages("sp")
 #both needed to separate hurricane data to repective counties
 
 
 #to view the packages
 library(readr)
+
 library(dplyr)
+
 library(ggplot2)
+
 library(lubridate)
+
 library(auk)
+
 library(plotly)
+
 library(maps)
+
 library(sp)
 
 hurdat2_data <- read_csv("hurdat2.csv")
@@ -52,15 +66,20 @@ Wanted_Hurricane_Data$longitude2 = Wanted_Hurricane_Data$longitude
 
 Wanted_Hurricane_Data$longitude <- ifelse(grepl("W", Wanted_Hurricane_Data$longitude),
                                           NA, Wanted_Hurricane_Data$longitude)
+
 Wanted_Hurricane_Data$longitude2 <- ifelse(grepl("E", Wanted_Hurricane_Data$longitude2),
                                            NA, Wanted_Hurricane_Data$longitude2)
+
 Wanted_Hurricane_Data$latitude <- ifelse(grepl("S", Wanted_Hurricane_Data$latitude),
                                          NA, Wanted_Hurricane_Data$latitude)
+
 #These removed certain values, replaced them to NAs so that it is easier for me to 
 #make the W values negative and then merge the columns
 
 unique(Wanted_Hurricane_Data$longitude)
+
 unique(Wanted_Hurricane_Data$longitude2)
+
 unique(Wanted_Hurricane_Data$latitude)
 #gives me a summary of what is in my column
 
