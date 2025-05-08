@@ -5,7 +5,7 @@
 <img width="1000" height="160" src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Logo_ebird.png">
 
 install.packages("readr")
-#to read csv files
+#to read csv files <brk>
 install.packages("dplyr")
 #to manipulate data
 install.packages("ggplot2")
