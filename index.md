@@ -1,5 +1,5 @@
-#Here you will see the code I did over my spring of 2025 semester at Agnes Scott College. 
-#This code explored the potential relationship with hurricane magnitudes and White Ibis occurances in and around the Georgia area.
+# Here you will see the code I did over my spring of 2025 semester at Agnes Scott College. 
+# This code explored the potential relationship with hurricane magnitudes and White Ibis occurances in and around the Georgia area.
 
 install.packages("readr")
 #to read csv files
@@ -151,6 +151,8 @@ HURICANEData$date <- as.Date(HURICANEData$date,format = "%Y%m%d")
 HURICANEData$Year <- substr(as.character(HURICANEData$date), 1, 4)
 #extract the year to make the plot easier to read
 
+# First plot with the hurricane data
+
 HMagnitude <- plot_ly(
   data = HURICANEData,
   x = ~Year,
@@ -172,6 +174,8 @@ HMagnitude <- plot_ly(
 
 HMagnitude
 #this is graph number 1
+
+# Georgia Map Using the Map Package
 
 georgia_map <- map_data("state") %>% filter(region == "georgia")
 #need Georgia map
@@ -209,6 +213,8 @@ Georgia_Hurricanes <- plot_ly() %>%
 Georgia_Hurricanes
 #Shows a Georgia map and the hurricanes over the years
 
+# Statistical Analyses
+
 #------I need to do statistical analyses for the dataset-------
 
 str(HURICANEData$Year)
@@ -235,7 +241,7 @@ summary(model)
 #p value is significant, wind speeds do have significant change over time
 #and it is unlikely to be random
 
-# " There's a statistically significant trend in hurricane wind speeds (knots) 
+#" There's a statistically significant trend in hurricane wind speeds (knots) 
 #over time, the years alone only explains about 20% of the variation 
 #in wind speed of hurricanes affecting Georgia.The rest likely comes from
 #other meteorological or environmental factors. "
@@ -259,6 +265,8 @@ cor(HURICANEData$Year, HURICANEData$maximum_sustained_wind_knots,
 #in hurricane wind speeds over time in my data (around Georgia), 
 #with a moderate inverse relationship.
 
+# Regression Model
+
 ggplot(HURICANEData, aes(x = Year, y = maximum_sustained_wind_knots)) +
   geom_point(alpha = 0.5, color = "steelblue") +  # Scatter points
   geom_smooth(method = "lm", se = TRUE, color = "red", linetype = "dashed") +  # Trend line
@@ -270,6 +278,7 @@ ggplot(HURICANEData, aes(x = Year, y = maximum_sustained_wind_knots)) +
   theme_minimal()
 #shows my regression line
 
+# White Ibis Data pulled from eBird
 #-------------------Moving on to work on bird data--------------------------
 
 Bird_DATA <- read.delim("ebd_US-GA_whiibi_202408_185008_smp_relFeb-2025.txt")
@@ -308,6 +317,7 @@ BIRDData2 <- BIRDData %>%
 #this merged repeating dates while adding up the observation values
 #and by county also made them a separate data table so it's easier to read
 
+# Plot White Ibis Data
 #-----------------------------------------------------------------
 BIRD <- BIRDData %>%
   group_by(COUNTY) %>%
@@ -334,7 +344,7 @@ BIRD$COUNTY <- tolower(BIRD$COUNTY)
 #need to lower case the county names in my data 
 
 
-# Merge map data with your observations
+#Merge map data with your observations
 ga_map2 <- ga_map %>%
   left_join(BIRD, by = c("subregion" = "COUNTY"))
 
@@ -343,7 +353,7 @@ ga_map_filtered <- ga_map2 %>%
   filter(!is.na(OBSERVATION.COUNT))
 #remove the NAs in the data
 
-# Plot
+#Plot
 ggplot(ga_map_filtered, aes(x = long, y = lat, group = group, fill = OBSERVATION.COUNT)) +
   geom_polygon(color = "black") +
   coord_fixed(1.0) +
@@ -355,11 +365,11 @@ ggplot(ga_map_filtered, aes(x = long, y = lat, group = group, fill = OBSERVATION
 
 #----------------------------------------------------------------
 
-# Load Georgia county polygons
+#Load Georgia county polygons
 ga_map2 <- map_data("county", region = "georgia")
 
-# Step 3: Create a function to assign each point to a county polygon
-# We'll use point-in-polygon matching (no spatial objects needed)
+#Step 3: Create a function to assign each point to a county polygon
+#We'll use point-in-polygon matching (no spatial objects needed)
 point_in_county <- function(lat, lon, county_df) {
   for (county_name in unique(county_df$subregion)) {
     polygon <- county_df[county_df$subregion == county_name, c("long", "lat")]
@@ -370,20 +380,20 @@ point_in_county <- function(lat, lon, county_df) {
   return(NA)
 }
 
-# Step 4: Assign counties to each storm observation
+#Step 4: Assign counties to each storm observation
 HURICANEData$COUNTY <- mapply(point_in_county, HURICANEData$latitude, HURICANEData$longitude, 
                               MoreArgs = list(county_df = ga_map))
 
-# Step 5: Summarize storm counts by county
+#Step 5: Summarize storm counts by county
 storm_counts <- HURICANEData %>%
   filter(!is.na(COUNTY)) %>%
   group_by(COUNTY) %>%
   summarise(STORM_COUNT = n_distinct(storm_name))
 
-# Step 6: Join storm counts to the map
+#Step 6: Join storm counts to the map
 ga_map2 <- left_join(ga_map, storm_counts, by = c("subregion" = "COUNTY"))
 
-# Step 7: Plot
+#Step 7: Plot
 ggplot(ga_map2, aes(x = long, y = lat, group = group, fill = STORM_COUNT)) +
   geom_polygon(color = "black") +
   coord_fixed(1.0) +
@@ -392,7 +402,7 @@ ggplot(ga_map2, aes(x = long, y = lat, group = group, fill = STORM_COUNT)) +
        fill = "Storms") +
   theme_minimal()
 
-# Define your 10 counties (must be lowercase to match map_data)
+#Define your 10 counties (must be lowercase to match map_data)
 target_counties <- tolower(c("Bibb", "Berrien", "Ben Hill", "Bartow", 
                              "Banks", "Baldwin", "Baker", "Bacon", 
                              "Appling", "Atkinson"))
@@ -404,7 +414,7 @@ ga_map_filtered <- ga_map %>%
 storm_counts_filtered <- storm_counts %>%
   filter(COUNTY %in% target_counties)
 
-# Join filtered data
+#Join filtered data
 ga_map_final <- left_join(ga_map_filtered, storm_counts_filtered, by = c("subregion" = "COUNTY"))
 
 ggplot(ga_map_final, aes(x = long, y = lat, group = group, fill = STORM_COUNT)) +
@@ -417,17 +427,17 @@ ggplot(ga_map_final, aes(x = long, y = lat, group = group, fill = STORM_COUNT)) 
 #plot for just the 10 counties
 
 
-# Step 1: Filter only matched counties (same as before)
+#Step 1: Filter only matched counties (same as before)
 HURICANEData$COUNTY <- mapply(point_in_county, HURICANEData$latitude, HURICANEData$longitude, 
                               MoreArgs = list(county_df = ga_map))
 
-# Step 2: Summarize wind speed per county (use mean, or change to sum/max if preferred)
+#Step 2: Summarize wind speed per county (use mean, or change to sum/max if preferred)
 wind_by_county <- HURICANEData %>%
   filter(!is.na(COUNTY)) %>%
   group_by(COUNTY) %>%
   summarise(AVG_WIND = mean(maximum_sustained_wind_knots, na.rm = TRUE))
 
-# Step 3: Filter for your 10 counties
+#Step 3: Filter for your 10 counties
 target_counties <- tolower(c("Bibb", "Berrien", "Ben Hill", "Bartow", 
                              "Banks", "Baldwin", "Baker", "Bacon", 
                              "Appling", "Atkinson"))
@@ -438,7 +448,7 @@ ga_map_filtered <- ga_map %>%
 wind_filtered <- wind_by_county %>%
   filter(COUNTY %in% target_counties)
 
-# Step 4: Join to map data
+#Step 4: Join to map data
 ga_map_final <- left_join(ga_map_filtered, wind_filtered, by = c("subregion" = "COUNTY"))
 
 ggplot(ga_map_final, aes(x = long, y = lat, group = group, fill = AVG_WIND)) +
@@ -451,10 +461,10 @@ ggplot(ga_map_final, aes(x = long, y = lat, group = group, fill = AVG_WIND)) +
 #---------------------------------------------------------------------------------
 
 
-# Merge both datasets by COUNTY
+#Merge both datasets by COUNTY
 merged_data <- left_join(BIRD, wind_filtered, by = c("COUNTY" = "COUNTY"))
 
-# Check merged data
+#Check merged data
 head(merged_data)
 
 merged_data <- na.omit(merged_data)
@@ -463,9 +473,11 @@ merged_data <- na.omit(merged_data)
 # Calculate correlation between White Ibis occurrences and wind speed
 correlation_result <- cor(merged_data$OBSERVATION.COUNT, merged_data$AVG_WIND, method = "pearson")
 
-# Print the correlation
+#Print the correlation
 correlation_result
 #0.1746848
+
+# Plot the Correlation between White Ibis and Hurricane Magnitude
 
 ggplot(merged_data, aes(x = AVG_WIND, y = OBSERVATION.COUNT)) +
   geom_point() +
