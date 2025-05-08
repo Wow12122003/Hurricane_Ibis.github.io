@@ -2,7 +2,7 @@
 # This code explored the potential relationship with hurricane magnitudes and White Ibis occurances in and around the Georgia area.
 
 <img width="1000" height="160" src="https://upload.wikimedia.org/wikipedia/commons/7/79/NOAA_logo.svg">
-<img width="1000" height="160" src="https://en.wikipedia.org/wiki/EBird#/media/File:Logo_ebird.png">
+<img src="https://en.wikipedia.org/wiki/EBird#/media/File:Logo_ebird.png">
 
 install.packages("readr")
 #to read csv files
