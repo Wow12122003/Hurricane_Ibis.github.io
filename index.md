@@ -151,6 +151,7 @@ HURICANEData <- filtered_HData %>%
     maximum_sustained_wind_knots >= 137 ~ "Category 5",
     TRUE ~ NA_character_  # For wind speeds below hurricane threshold or missing
   ))
+
 #making a column category for the wind speeds in knots, most of the data was either classified at a tropical storm or tropical depression and only 6 were considered hurricanes within category 1
 
 #https://www.nhc.noaa.gov/aboutsshws.php where I got the category info from
